@@ -1,5 +1,5 @@
 services:
-  doc2pdf:
+  vni_doc2pdf:
     build: 
       context: .
       dockerfile: backend/Dockerfile
