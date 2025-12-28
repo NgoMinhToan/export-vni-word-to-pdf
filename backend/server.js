@@ -23,6 +23,9 @@ const log = (level, msg, extra = {}) => {
 // 👉 SERVE FRONTEND
 app.use(express.static(path.join(__dirname, "../public")));
 
+app.set("trust proxy", true);
+app.get("/health", (_, res) => res.send("ok"));
+
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/index.html"));
 });
@@ -97,8 +100,9 @@ app.post("/upload", upload.single("file"), (req, res) => {
     );
 });
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
     log("INFO", "Server started", {
-        url: "http://localhost:3000",
+        url: `http://localhost:${PORT}`,
     });
 });

@@ -29,7 +29,8 @@ function addFile(file) {
     const item = {
         file,
         status: "pending",
-        blob: null
+        blob: null,
+        retryCount: 0
     };
 
     queue.push(item);
@@ -92,7 +93,21 @@ async function convert(item) {
 
     } catch {
         item.status = "error";
-        status.textContent = "Lỗi";
         status.className = "status error";
+
+        status.innerHTML = `
+        <span>Lỗi</span>
+        <button class="download retry">Thử lại</button>
+    `;
+
+        status.querySelector(".retry").onclick = async () => {
+            item.retryCount++;
+            if (item.retryCount > 3) {
+                status.textContent = "Thử lại quá nhiều lần";
+                return;
+            }
+            item.status = "pending";
+            await convert(item);
+        };
     }
 }
